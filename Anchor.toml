@@ -1,6 +1,7 @@
 [toolchain]
 package_manager = "Yarn"
-
+anchor_version = "0.30.1"    # `anchor-cli` version to use(requires `avm`)
+solana_version = "1.18.26"    # Solana version to use(applies to all Solana tools)
 [features]
 resolution = true
 skip-lint = false

@@ -1,9 +1,10 @@
 pub mod ixs;
 
+use crate::ixs::deposit::DepositState;
 use crate::ixs::init_a_stake::StakingState;
 use anchor_lang::prelude::*;
+use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
-use crate::ixs::deposit::DepositState;
 
 pub const POOL_STATE: &str = "pool_state";
 pub const DEPOSITOR_STATE: &str = "depositor_state";
@@ -18,7 +19,7 @@ pub mod token_stake {
     }
 
     pub fn deposit(ctx: Context<Deposit>, staking_amount: u64) -> Result<()> {
-        ixs::deposit::deposit(ctx,staking_amount)
+        ixs::deposit::deposit(ctx, staking_amount)
     }
 }
 
@@ -40,8 +41,8 @@ pub struct Initialize<'info> {
     #[account(
         init,
         payer = creator,
-        token::mint = staking_token,
-        token::authority = pool_state,
+        associated_token::mint = staking_token,
+        associated_token::authority = pool_state,
     )]
     pub staking_token_ata: InterfaceAccount<'info, TokenAccount>,
 
@@ -51,6 +52,7 @@ pub struct Initialize<'info> {
     pub staking_token: InterfaceAccount<'info, Mint>,
     pub system_program: Program<'info, System>,
     pub token_program: Interface<'info, TokenInterface>,
+    pub associated_token_program: Program<'info, AssociatedToken>,
 }
 
 #[derive(Accounts)]
@@ -78,13 +80,13 @@ pub struct Deposit<'info> {
         token::authority = depositor,
     )]
     pub depositor_token_ata: InterfaceAccount<'info, TokenAccount>,
-    
+
     #[account(
         token::mint = staking_token,
         token::authority = pool_state,
     )]
     pub pool_token_ata: InterfaceAccount<'info, TokenAccount>,
-    
+
     #[account(
         mint::token_program = token_program,
     )]
