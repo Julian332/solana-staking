@@ -8,7 +8,6 @@ use anchor_spl::token_2022::spl_token_2022::extension::{
     BaseStateWithExtensions, StateWithExtensions,
 };
 
-pub mod add_reward;
 pub mod deposit;
 pub mod init_a_stake;
 pub mod withdraw;
@@ -32,4 +31,18 @@ pub fn get_transfer_fee(token: &AccountInfo, pre_fee_amount: u64) -> anchor_lang
 #[account]
 pub struct DepositorState {
     pub depositor_lp: u64,
+    pub total_staking: u64,
+}
+impl DepositorState {
+    pub const DEPOSITOR_STATE_SPACE: usize = 8 + 8 + 8;
+}
+#[account]
+pub struct StakingState {
+    pub staking_token_ata: Pubkey,
+    pub staking_token: Pubkey,
+    pub creator: Pubkey,
+    pub total_lp: u64,
+}
+impl StakingState {
+    pub const POOL_STATE_SPACE: usize = 8 + 8 + 32 * 3;
 }

@@ -1,16 +1,8 @@
-use crate::{Deposit, Initialize};
+use crate::Initialize;
 use anchor_lang::prelude::*;
 use std::ops::DerefMut;
 
 //todo
-pub const POOL_STATE_SPACE: usize = 8 + 8 + 32 * 3;
-#[account]
-pub struct StakingState {
-    pub staking_token_ata: Pubkey,
-    pub staking_token: Pubkey,
-    pub creator: Pubkey,
-    pub total_lp: u64,
-}
 
 pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
     // msg!("Greetings from: {:?}", ctx.program_id);

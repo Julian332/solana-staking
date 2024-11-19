@@ -1,7 +1,6 @@
 pub mod ixs;
 
-use crate::ixs::init_a_stake::StakingState;
-use crate::ixs::DepositorState;
+use crate::ixs::{DepositorState, StakingState};
 use anchor_lang::prelude::*;
 use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
@@ -35,7 +34,7 @@ pub struct Initialize<'info> {
     #[account(
         init,
         payer = creator,
-        space = ixs::init_a_stake::POOL_STATE_SPACE,
+        space = StakingState::POOL_STATE_SPACE,
         seeds = [POOL_STATE.as_bytes(),staking_token.key().as_ref()],
         bump,
 
@@ -65,6 +64,7 @@ pub struct Deposit<'info> {
     pub depositor: Signer<'info>,
 
     #[account(
+        mut,
         seeds = [POOL_STATE.as_bytes(),staking_token.key().as_ref()],
         bump,
     )]
@@ -73,19 +73,21 @@ pub struct Deposit<'info> {
     #[account(
         init_if_needed,
         payer = depositor,
-        space = ixs::deposit::DEPOSITOR_STATE_SPACE,
+        space = DepositorState::DEPOSITOR_STATE_SPACE,
         seeds = [DEPOSITOR_STATE.as_bytes(),staking_token.key().as_ref(),depositor.key().as_ref()],
         bump,
     )]
     pub depositor_state: Account<'info, DepositorState>,
 
     #[account(
+        mut,
         token::mint = staking_token,
         token::authority = depositor,
     )]
     pub depositor_token_ata: InterfaceAccount<'info, TokenAccount>,
 
     #[account(
+        mut,
         token::mint = staking_token,
         token::authority = pool_state,
     )]
@@ -105,6 +107,7 @@ pub struct Withdraw<'info> {
     pub depositor: Signer<'info>,
 
     #[account(
+        mut,
         seeds = [POOL_STATE.as_bytes(),staking_token.key().as_ref()],
         bump,
     )]
@@ -113,19 +116,21 @@ pub struct Withdraw<'info> {
     #[account(
         init_if_needed,
         payer = depositor,
-        space = ixs::deposit::DEPOSITOR_STATE_SPACE,
+        space = DepositorState::DEPOSITOR_STATE_SPACE,
         seeds = [DEPOSITOR_STATE.as_bytes(),staking_token.key().as_ref(),depositor.key().as_ref()],
         bump,
     )]
     pub depositor_state: Account<'info, DepositorState>,
 
     #[account(
+        mut,
         token::mint = staking_token,
         token::authority = depositor,
     )]
     pub depositor_token_ata: InterfaceAccount<'info, TokenAccount>,
 
     #[account(
+        mut,
         token::mint = staking_token,
         token::authority = pool_state,
     )]

@@ -2,7 +2,6 @@ use crate::{ixs, Deposit};
 use anchor_lang::context::Context;
 use anchor_lang::prelude::*;
 use std::ops::DerefMut;
-pub const DEPOSITOR_STATE_SPACE: usize = 8 + 8;
 pub const MIN_STAKING_AMOUNT: u64 = 10000;
 
 pub(crate) fn deposit(ctx: Context<Deposit>, staking_amount: u64) -> Result<()> {
@@ -39,5 +38,6 @@ pub(crate) fn deposit(ctx: Context<Deposit>, staking_amount: u64) -> Result<()> 
     };
     pool_state.total_lp += new_lp as u64;
     depositor_state.depositor_lp += new_lp as u64;
+    depositor_state.total_staking += staking_amount;
     Ok(())
 }
