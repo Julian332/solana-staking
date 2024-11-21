@@ -2,16 +2,19 @@ use crate::{ixs, Deposit};
 use anchor_lang::context::Context;
 use anchor_lang::prelude::*;
 use std::ops::DerefMut;
-pub const MIN_STAKING_AMOUNT: u64 = 10000;
+use anchor_lang::solana_program::address_lookup_table::instruction::create_lookup_table;
+
+pub const MIN_STAKING_AMOUNT: u64 = 100;
 
 pub(crate) fn deposit(ctx: Context<Deposit>, staking_amount: u64) -> Result<()> {
-    assert!(staking_amount > MIN_STAKING_AMOUNT);
+    // create_lookup_table()
+    let decimal = ctx.accounts.staking_token.decimals;
+    assert!(staking_amount > MIN_STAKING_AMOUNT*10u64.pow(decimal as u32));
     let token_prog = ctx.accounts.token_program.to_account_info();
     let depositor = ctx.accounts.depositor.to_account_info();
     let staking_token = ctx.accounts.staking_token.to_account_info();
     let pool_token_ata = ctx.accounts.pool_token_ata.to_account_info();
     let depositor_token_ata = ctx.accounts.depositor_token_ata.to_account_info();
-    let decimal = ctx.accounts.staking_token.decimals;
     let depositor_state = ctx.accounts.depositor_state.deref_mut();
     let pool_state = ctx.accounts.pool_state.deref_mut();
 
@@ -38,6 +41,6 @@ pub(crate) fn deposit(ctx: Context<Deposit>, staking_amount: u64) -> Result<()> 
     };
     pool_state.total_lp += new_lp as u64;
     depositor_state.depositor_lp += new_lp as u64;
-    depositor_state.total_staking += staking_amount;
+    depositor_state.total_staked += staking_amount;
     Ok(())
 }

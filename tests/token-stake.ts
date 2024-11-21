@@ -86,12 +86,12 @@ describe("token-stake", () => {
             }).rpc();
             let user_state_data = await program.account.depositorState.fetch(user_state);
             let pool_state_data = await program.account.stakingState.fetch(pool_state);
-            console.log("user lp"+user_state_data.depositorLp.toString());
-            console.log("pool lp"+pool_state_data.totalLp.toString());
+            console.log("user lp: "+user_state_data.depositorLp.toString());
+            console.log("pool lp: "+pool_state_data.totalLp.toString());
             user_ata = await getAccount(connection, user_ata.address,);
             let pool_ata = await getAccount(connection, pool_ata_addr,);
-            console.log("user token balance"+user_ata.amount);
-            console.log("pool token balance"+pool_ata.amount);
+            console.log("user token balance: "+user_ata.amount);
+            console.log("pool token balance: "+pool_ata.amount);
 
 
             await transferChecked(connection, payer, payer_ata.address, mint, pool_ata_addr, payer, 1000000, decimal);
@@ -114,12 +114,12 @@ describe("token-stake", () => {
             }).rpc();
             user_state_data = await program.account.depositorState.fetch(user_state);
             pool_state_data = await program.account.stakingState.fetch(pool_state);
-            console.log("user lp"+user_state_data.depositorLp.toString());
-            console.log("pool lp"+pool_state_data.totalLp.toString());
+            console.log("user lp: "+user_state_data.depositorLp.toString());
+            console.log("pool lp: "+pool_state_data.totalLp.toString());
             user_ata = await getAccount(connection, user_ata.address,);
             pool_ata = await getAccount(connection, pool_ata_addr,);
-            console.log("user token balance"+user_ata.amount);
-            console.log("pool token balance"+pool_ata.amount);
+            console.log("user token balance: "+user_ata.amount);
+            console.log("pool token balance: "+pool_ata.amount);
 
         } catch (e) {
             console.log(e);

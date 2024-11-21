@@ -31,10 +31,11 @@ pub fn get_transfer_fee(token: &AccountInfo, pre_fee_amount: u64) -> anchor_lang
 #[account]
 pub struct DepositorState {
     pub depositor_lp: u64,
-    pub total_staking: u64,
+    pub total_staked: u64,
+    pub total_withdrew: u64,
 }
 impl DepositorState {
-    pub const DEPOSITOR_STATE_SPACE: usize = 8 + 8 + 8;
+    pub const DEPOSITOR_STATE_SPACE: usize = 8 + 8*3;
 }
 #[account]
 pub struct StakingState {

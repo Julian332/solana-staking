@@ -25,6 +25,7 @@ pub(crate) fn withdraw(ctx: Context<Withdraw>, lp_to_withdraw: u64) -> Result<()
     ]];
 
     depositor_state.depositor_lp -= lp_to_withdraw;
+    depositor_state.total_withdrew += token_to_withdraw as u64;
     pool_state.total_lp -= lp_to_withdraw;
     let context = CpiContext::new_with_signer(
         token_prog,
